@@ -33,14 +33,6 @@ jobs:
           poetry install
           ./setup.sh
 
-      - name: Wait for API to be ready
-        run: |
-          while ! curl -sSf http://localhost:8000 > /dev/null; do
-            echo "Waiting for API to be ready..."
-            sleep 5
-          done
-          echo "API is ready!"
-
       - name: Run tests
         run: |
           poetry run pytest --tb=short --disable-warnings -q

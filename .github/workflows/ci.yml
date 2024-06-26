@@ -16,6 +16,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      api:
+        image: my-api-image:latest
+        ports:
+          - 8000:8000
+        options: >-
+          --health-cmd "curl --fail http://localhost:8000 || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,12 +43,19 @@ jobs:
           poetry lock
           poetry install
 
+      - name: Wait for API to be ready
+        run: |
+          while ! curl -sSf http://localhost:8000 > /dev/null; do
+            echo "Waiting for API to be ready..."
+            sleep 5
+          done
+          echo "API is ready!"
+
       - name: Run tests
         run: |
-          poetry run pytest
+          poetry run pytest --tb=short --disable-warnings -q
 
       - name: Deactivate Virtual Environment
         if: always()
         run: |
           deactivate || echo "Deactivation not needed for this setup"
-          

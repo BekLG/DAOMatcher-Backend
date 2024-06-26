@@ -36,7 +36,7 @@ jobs:
       - name: Run tests
         run: |
           source env/bin/activate
-          pytest
+          poetry run pytest integration_test.py
 
       - name: Deactivate Virtual Environment
         run: deactivate || echo "Deactivation not needed for this setup"

@@ -39,4 +39,6 @@ jobs:
           poetry run pytest
 
       - name: Deactivate Virtual Environment
-        run: deactivate || echo "Deactivation not needed for this setup"
+        if: always()
+        run: |
+          deactivate || echo "Deactivation not needed for this setup"

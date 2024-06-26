@@ -1,9 +1,6 @@
 name: Run Tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -19,28 +16,27 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.8, 3.9, 3.10, 3.11.6]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Install Python
+        uses: actions/setup-python@v3
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11.6'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m venv env
+          source env/bin/activate
           pip install poetry
+          poetry lock
           poetry install
 
       - name: Run tests
-        run: poetry run pytest
+        run: |
+          source env/bin/activate
+          poetry run pytest
 
       - name: Deactivate Virtual Environment
-        run: |
-          deactivate || echo "Deactivation not needed for this setup"
+        run: deactivate || echo "Deactivation not needed for this setup"

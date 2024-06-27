@@ -28,7 +28,7 @@ jobs:
 
       - name: Wait for API to be ready
         run: |
-          while ! curl -sSf http://localhost:8000 > /dev/null; do
+          while ! curl -sSf http://localhost:8000/api/search > /dev/null; do
             echo "Waiting for API to be ready..."
             sleep 5
           done

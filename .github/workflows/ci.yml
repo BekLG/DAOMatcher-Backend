@@ -5,13 +5,6 @@ on:
     branches:
       - main
 
-env:
-  TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
-  TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
-  TWITTER_TOKEN: ${{ secrets.TWITTER_API_SECRET }}
-  LIX_API_KEY: ${{ secrets.LIX_API_KEY }}
-  PALM_API_KEY: ${{ secrets.PALM_API_KEY }}
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -32,6 +25,14 @@ jobs:
           poetry lock
           poetry install
           ./setup.sh
+
+      - name: Wait for API to be ready
+        run: |
+          while ! curl -sSf http://localhost:8000 > /dev/null; do
+            echo "Waiting for API to be ready..."
+            sleep 5
+          done
+          echo "API is ready!"
 
       - name: Run tests
         run: |

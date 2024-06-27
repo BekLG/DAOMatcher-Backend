@@ -27,6 +27,7 @@ bs4 = "^0.0.2"
 gevent-websocket = "^0.10.1"
 flask-login = "^0.6.3"
 langchain-google-vertexai = "^1.0.5"
+pytest = "^7.0"
 
 
 [build-system]
